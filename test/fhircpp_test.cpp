@@ -19,11 +19,14 @@
 
 TEST(fhircpp_test, primitive_boolean) {
     fhir::boolean b;
-    ASSERT_EQ(b.value(), false);
+    ASSERT_FALSE(b.value());
+    ASSERT_TRUE(b.valid());
 
     fhir::boolean b2(true);
-    ASSERT_EQ(b2.value(), true);
+    ASSERT_TRUE(b2.value());
+    ASSERT_TRUE(b2.valid());
 
     fhir::boolean b3(b2);
-    ASSERT_EQ(b3.value(), true);
+    ASSERT_TRUE(b3.value());
+    ASSERT_TRUE(b3.valid());
 }
