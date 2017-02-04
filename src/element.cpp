@@ -16,6 +16,7 @@
 
 #include "../include/element.hpp"
 
+/// Namespace for all fhircpp library code
 namespace fhir
 {
     element::element()

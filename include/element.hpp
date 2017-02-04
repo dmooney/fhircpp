@@ -17,14 +17,26 @@
 #ifndef FHIRCPP_ELEMENT_HPP
 #define FHIRCPP_ELEMENT_HPP
 
+/// Namespace for all fhircpp library code
 namespace fhir
 {
+    /// The base definition for all elements contained inside a resource.
     class element
     {
     public:
+        /// Default constructor for element
         element();
+
+        /// Copy constructor for element
+        /// \param other Object to be copied from
         element(const element& other);
+
+        /// Assignment operator for element
+        /// \param other Object to be copied from
+        /// \return *this
         element& operator=(const element& other);
+
+        /// Destructor for element
         virtual ~element();
     };
 }
