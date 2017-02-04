@@ -35,3 +35,6 @@ CMakeFiles
 CMakeCache.txt
 *.cbp
 Makefile
+
+# CLion files
+.idea

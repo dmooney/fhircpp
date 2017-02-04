@@ -15,7 +15,7 @@
 //    limitations under the License.
 
 #include <iostream>
-#include "primitive.hpp"
+#include "include/primitive.hpp"
 
 int main()
 {

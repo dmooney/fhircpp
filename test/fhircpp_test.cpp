@@ -14,26 +14,16 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
-#include "element.hpp"
+#include "primitive.hpp"
+#include "gtest/gtest.h"
 
-namespace fhir
-{
-    element::element()
-    {
-    }
+TEST(fhircpp_test, primitive_boolean) {
+    fhir::boolean b;
+    ASSERT_EQ(b.value(), false);
 
-    element::element(const element& other)
-    {
-    }
+    fhir::boolean b2(true);
+    ASSERT_EQ(b2.value(), true);
 
-    element& element::operator=(const element& other)
-    {
-        if (this != &other) {
-        }
-        return *this;
-    }
-
-    element::~element()
-    {
-    }
+    fhir::boolean b3(b2);
+    ASSERT_EQ(b3.value(), true);
 }
