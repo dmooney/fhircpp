@@ -17,16 +17,42 @@
 #include "primitive.hpp"
 #include "gtest/gtest.h"
 
-TEST(fhircpp_test, primitive_boolean) {
+class fhircpp_test : public ::testing::Test {};
+
+TEST(fhircpp_test, primitive_boolean)
+{
     fhir::boolean b;
-    ASSERT_FALSE(b.value());
-    ASSERT_TRUE(b.valid());
+    EXPECT_FALSE(b.value());
+    EXPECT_TRUE(b.valid());
 
     fhir::boolean b2(true);
     ASSERT_TRUE(b2.value());
-    ASSERT_TRUE(b2.valid());
+    EXPECT_TRUE(b2.valid());
 
     fhir::boolean b3(b2);
-    ASSERT_TRUE(b3.value());
-    ASSERT_TRUE(b3.valid());
+    EXPECT_TRUE(b3.value());
+    EXPECT_TRUE(b3.valid());
+
+    fhir::boolean b4 = b3;
+    EXPECT_TRUE(b4.value());
+    EXPECT_TRUE(b4.valid());
+}
+
+TEST(fhircpp_test, primitive_integer)
+{
+    fhir::integer i;
+    EXPECT_EQ(i.value(), 0);
+    EXPECT_TRUE(i.valid());
+
+    fhir::integer i2(1);
+    ASSERT_EQ(i2.value(), 1);
+    EXPECT_TRUE(i2.valid());
+
+    fhir::integer i3(i2);
+    EXPECT_EQ(i3.value(), 1);
+    EXPECT_TRUE(i3.valid());
+
+    fhir::integer i4(i3);
+    EXPECT_EQ(i4.value(), 1);
+    EXPECT_TRUE(i4.valid());
 }
