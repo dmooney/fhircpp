@@ -36,6 +36,14 @@ TEST(fhircpp_test, primitive_boolean)
     fhir::boolean b4 = b3;
     EXPECT_TRUE(b4.value());
     EXPECT_TRUE(b4.valid());
+
+    fhir::boolean b5("false");
+    EXPECT_FALSE(b5.value());
+    EXPECT_TRUE(b5.valid());
+
+    fhir::boolean b6("true");
+    EXPECT_TRUE(b6.value());
+    EXPECT_TRUE(b6.valid());
 }
 
 TEST(fhircpp_test, primitive_integer)
@@ -55,4 +63,8 @@ TEST(fhircpp_test, primitive_integer)
     fhir::integer i4(i3);
     EXPECT_EQ(i4.value(), 1);
     EXPECT_TRUE(i4.valid());
+
+    fhir::integer i5("42");
+    EXPECT_EQ(i5.value(), 42);
+    EXPECT_TRUE(i5.valid());
 }

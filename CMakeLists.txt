@@ -32,7 +32,7 @@ add_library(${PROJECT_NAME} ${SRC_FILES})
 target_link_libraries(fhircpp boost_locale)
 
 # Debug program
-set(EXE_SOURCE_FILES main.cpp ${SRC_FILES})
+set(EXE_SOURCE_FILES main.cpp ${SRC_FILES} src/primitive.cpp)
 add_executable(fhircpp_debug ${EXE_SOURCE_FILES})
 target_link_libraries(fhircpp_debug ${PROJECT_NAME} boost_locale)
 

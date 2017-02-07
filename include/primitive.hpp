@@ -21,6 +21,7 @@
 #include <cstdint>
 #include <regex>
 #include <string>
+#include <boost/algorithm/string.hpp>
 #include <boost/locale/date_time.hpp>
 #include <boost/multiprecision/cpp_dec_float.hpp>
 #include "element.hpp"
@@ -35,7 +36,23 @@ namespace fhir
         {
             return true;
         }
+        static T parse(const std::string& str)
+        {
+            // This space intentionally left blank to trigger compile errors when no specialized parse method exists.
+        }
     };
+
+    template<>
+    bool default_primitive_traits<bool>::parse(const std::string& str)
+    {
+        return boost::iequals(str, "true");
+    }
+
+    template<>
+    std::int32_t default_primitive_traits<std::int32_t>::parse(const std::string& str)
+    {
+        return std::stol(str);
+    }
 
     template<typename T>
     struct regex_primitive_traits : private T {
@@ -49,23 +66,20 @@ namespace fhir
     struct code_regex_traits {
         typedef std::wstring value_type;
     protected:
-        static const wchar_t * validation_regex;
+        static const std::wstring validation_regex;
     };
-    const wchar_t * code_regex_traits::validation_regex = L"[^\\s]+([\\s]+[^\\s]+)*";
 
     struct oid_regex_traits {
         typedef std::wstring value_type;
     protected:
-        static const wchar_t * validation_regex;
+        static const std::wstring validation_regex;
     };
-    const wchar_t * oid_regex_traits::validation_regex = L"urn:oid:[0-2](\\.[1-9]\\d*)+";
 
     struct id_regex_traits {
         typedef std::string value_type;
     protected:
-        static const char * validation_regex;
+        static const std::string validation_regex;
     };
-    const char * id_regex_traits::validation_regex = "[A-Za-z0-9\\-\\.]{1,64}";
 
     struct positive_int_traits {
         typedef std::uint32_t value_type;
@@ -118,7 +132,12 @@ namespace fhir
             : value_(other.value_)
             , is_valid_(other.is_valid_)
         {
+        }
 
+        primitive(const char * str)
+                : value_(Traits::parse(str))
+                , is_valid_(Traits::validate(value_))
+        {
         }
 
         /// Assignment operator for the primitive element
