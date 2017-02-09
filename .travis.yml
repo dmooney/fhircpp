@@ -5,6 +5,11 @@ compiler:
   - clang
   - gcc
 
+addons:
+  apt:
+    packages:
+    - cmake
+
 install:
   - wget --quiet -O - https://raw.githubusercontent.com/r-lyeh/depot/master/travis.pre.sh   | bash -x
 
