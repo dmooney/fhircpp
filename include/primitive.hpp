@@ -38,7 +38,9 @@ namespace fhir
         }
         static T parse(const std::string& str)
         {
-            // This space intentionally left blank to trigger compile errors when no specialized parse method exists.
+            if (std::is_same<T, std::string>::value) {
+                return str;
+            }
         }
     };
 
@@ -64,15 +66,15 @@ namespace fhir
     };
 
     struct code_regex_traits {
-        typedef std::wstring value_type;
+        typedef std::string value_type;
     protected:
-        static const std::wstring validation_regex;
+        static const std::string validation_regex;
     };
 
     struct oid_regex_traits {
-        typedef std::wstring value_type;
+        typedef std::string value_type;
     protected:
-        static const std::wstring validation_regex;
+        static const std::string validation_regex;
     };
 
     struct id_regex_traits {
@@ -152,6 +154,26 @@ namespace fhir
             return *this;
         }
 
+        /// Assignment operator using value type
+        /// \param value Value to be assigned
+        /// \return *this
+        primitive& operator=(const typename Traits::value_type& value)
+        {
+            value_ = value;
+            is_valid_ = Traits::validate(value_);
+            return *this;
+        }
+
+        /// Assignment operator using string value
+        /// \param value Value to be parsed and assigned
+        /// \return *this
+        primitive& operator=(const char * value)
+        {
+            value_ = Traits::parse(value);
+            is_valid_ = Traits::validate(value_);
+            return *this;
+        }
+
         /// Destructor for the primitive element
         virtual ~primitive()
         {
@@ -183,13 +205,13 @@ namespace fhir
     typedef primitive<default_primitive_traits<std::int32_t>> integer;
 
     /// Primitive sequence of Unicode characters, not to exceed 1MB in size
-    typedef primitive<default_primitive_traits<std::wstring>> string;
+    typedef primitive<default_primitive_traits<std::string>> string;
 
     /// Primitive type for rational numbers that have a decimal representation
     typedef primitive<default_primitive_traits<boost::multiprecision::cpp_dec_float_50>> decimal;
 
     /// Priitive type for a Uniform Resource Identifier (RFC 3986)
-    typedef primitive<default_primitive_traits<std::wstring>> uri;
+    typedef primitive<default_primitive_traits<std::string>> uri;
 
     /// Primitive type for a stream of bytes, base64 encoded (RFC 4648)
     typedef primitive<default_primitive_traits<std::string>> base64_binary;
@@ -227,7 +249,7 @@ namespace fhir
     typedef primitive<regex_primitive_traits<id_regex_traits>> id;
 
     /// A string that may contain markdown syntax for optional processing by a markdown presentation engine
-    typedef primitive<default_primitive_traits<std::wstring>> markdown;
+    typedef primitive<default_primitive_traits<std::string>> markdown;
 
     /// Any non-negative integer (e.g. >= 0)
     typedef primitive<default_primitive_traits<std::uint32_t>> unsigned_int;

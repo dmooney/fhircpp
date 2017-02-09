@@ -17,7 +17,7 @@
 #include "primitive.hpp"
 
 namespace fhir {
-    const std::wstring code_regex_traits::validation_regex = L"[^\\s]+([\\s]+[^\\s]+)*";
-    const std::wstring oid_regex_traits::validation_regex = L"urn:oid:[0-2](\\.[1-9]\\d*)+";
+    const std::string code_regex_traits::validation_regex = "[^\\s]+([\\s]+[^\\s]+)*";
+    const std::string oid_regex_traits::validation_regex = "urn:oid:[0-2](\\.[1-9]\\d*)+";
     const std::string id_regex_traits::validation_regex = "[A-Za-z0-9\\-\\.]{1,64}";
 }

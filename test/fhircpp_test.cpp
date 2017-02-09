@@ -44,6 +44,28 @@ TEST(fhircpp_test, primitive_boolean)
     fhir::boolean b6("true");
     EXPECT_TRUE(b6.value());
     EXPECT_TRUE(b6.valid());
+
+    fhir::boolean b7 = "true";
+    EXPECT_TRUE(b7.value());
+    EXPECT_TRUE(b7.valid());
+
+    fhir::boolean b7a = "false";
+    EXPECT_FALSE(b7a.value());
+    EXPECT_TRUE(b7a.valid());
+
+    fhir::boolean b8;
+    b8 = true;
+    EXPECT_TRUE(b8.value());
+    EXPECT_TRUE(b8.valid());
+
+    fhir::boolean b9;
+    b9 = "true";
+    EXPECT_TRUE(b9.value());
+    EXPECT_TRUE(b9.valid());
+
+    b9 = "false";
+    EXPECT_FALSE(b9.value());
+    EXPECT_TRUE(b9.valid());
 }
 
 TEST(fhircpp_test, primitive_integer)
@@ -67,4 +89,49 @@ TEST(fhircpp_test, primitive_integer)
     fhir::integer i5("42");
     EXPECT_EQ(i5.value(), 42);
     EXPECT_TRUE(i5.valid());
+
+    fhir::integer i6 = 42;
+    EXPECT_EQ(i6.value(), 42);
+    EXPECT_TRUE(i6.valid());
+
+    fhir::integer i7("42");
+    EXPECT_EQ(i7.value(), 42);
+    EXPECT_TRUE(i7.valid());
+
+    fhir::integer i8 = "42";
+    EXPECT_EQ(i8.value(), 42);
+    EXPECT_TRUE(i8.valid());
+
+    fhir::integer i9;
+    i9 = "42";
+    EXPECT_EQ(i9.value(), 42);
+    EXPECT_TRUE(i9.valid());
+}
+
+TEST(fhircpp_test, primitive_string)
+{
+    fhir::string s;
+    EXPECT_EQ(s.value(), "");
+    EXPECT_TRUE(s.valid());
+
+    fhir::string s1("foo");
+    EXPECT_EQ(s1.value(), "foo");
+    EXPECT_TRUE(s1.valid());
+
+    fhir::string s2 = s1;
+    EXPECT_EQ(s2.value(), "foo");
+    EXPECT_TRUE(s2.valid());
+
+    fhir::string s3 = std::string("bar");
+    EXPECT_EQ(s3.value(), "bar");
+    EXPECT_TRUE(s3.valid());
+
+    fhir::string s4 = "baz";
+    EXPECT_EQ(s4.value(), "baz");
+    EXPECT_TRUE(s4.valid());
+
+    fhir::string s5;
+    s5 = "qux";
+    EXPECT_EQ(s5.value(), "qux");
+    EXPECT_TRUE(s5.valid());
 }
