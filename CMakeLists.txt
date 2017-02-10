@@ -14,7 +14,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.6)
 project(fhircpp CXX)
 
 find_package(Threads REQUIRED)
@@ -32,9 +32,9 @@ add_library(${PROJECT_NAME} ${SRC_FILES})
 target_link_libraries(fhircpp boost_locale)
 
 # Debug program
-#set(EXE_SOURCE_FILES main.cpp ${SRC_FILES} src/primitive.cpp)
-#add_executable(fhircpp_debug ${EXE_SOURCE_FILES})
-#target_link_libraries(fhircpp_debug ${PROJECT_NAME} boost_locale)
+set(EXE_SOURCE_FILES main.cpp ${SRC_FILES} src/primitive.cpp)
+add_executable(fhircpp_debug ${EXE_SOURCE_FILES})
+target_link_libraries(fhircpp_debug ${PROJECT_NAME} boost_locale)
 
 # GTest
 set(TP_PROJECTS_DIR ${PROJECT_SOURCE_DIR}/third_party)
