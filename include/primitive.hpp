@@ -41,6 +41,9 @@ namespace fhir
             if (std::is_same<T, std::string>::value) {
                 return str;
             }
+            else {
+                return T(str);
+            }
         }
     };
 
@@ -54,6 +57,13 @@ namespace fhir
     std::int32_t default_primitive_traits<std::int32_t>::parse(const std::string& str)
     {
         return std::stol(str);
+    }
+
+    template<>
+    boost::multiprecision::cpp_dec_float_50
+    default_primitive_traits<boost::multiprecision::cpp_dec_float_50>::parse(const std::string& str)
+    {
+        return boost::multiprecision::cpp_dec_float_50(str.c_str());
     }
 
     template<typename T>
@@ -113,10 +123,9 @@ namespace fhir
     {
     public:
         /// Default constructor for the primitive element, initializes the value using the value_type's default
-        /// constuctor
+        /// constructor
         primitive()
-            : value_(typename Traits::value_type())
-            , is_valid_(Traits::validate(value_))
+            : primitive{typename Traits::value_type()}
         {
         }
 
@@ -136,9 +145,10 @@ namespace fhir
         {
         }
 
+        /// String constructor which will parse the string value if necessary
+        /// \param str String representation of the value
         primitive(const char * str)
-                : value_(Traits::parse(str))
-                , is_valid_(Traits::validate(value_))
+                : primitive{Traits::parse(str)}
         {
         }
 
@@ -210,7 +220,7 @@ namespace fhir
     /// Primitive type for rational numbers that have a decimal representation
     typedef primitive<default_primitive_traits<boost::multiprecision::cpp_dec_float_50>> decimal;
 
-    /// Priitive type for a Uniform Resource Identifier (RFC 3986)
+    /// Primitive type for a Uniform Resource Identifier (RFC 3986)
     typedef primitive<default_primitive_traits<std::string>> uri;
 
     /// Primitive type for a stream of bytes, base64 encoded (RFC 4648)
@@ -256,5 +266,18 @@ namespace fhir
 
     /// Any positive integer (e.g. > 0)
     typedef primitive<positive_int_traits> positive_int;
+
+    template<typename Traits>
+    std::ostream& operator<<(std::ostream& out, const primitive<Traits>& pr)
+    {
+        out << pr.value();
+        return out;
+    }
+
+    std::ostream& operator<<(std::ostream& out, const boolean& b)
+    {
+        out << std::boolalpha << b.value();
+        return out;
+    }
 }
-#endif //FHIRCPP_PRIMATIVE_HPP
+#endif //FHIRCPP_PRIMITIVE_HPP

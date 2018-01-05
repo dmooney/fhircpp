@@ -66,6 +66,8 @@ TEST(fhircpp_test, primitive_boolean)
     b9 = "false";
     EXPECT_FALSE(b9.value());
     EXPECT_TRUE(b9.valid());
+
+    std::cout << std::endl << b9 << std::endl;
 }
 
 TEST(fhircpp_test, primitive_integer)
@@ -106,6 +108,8 @@ TEST(fhircpp_test, primitive_integer)
     i9 = "42";
     EXPECT_EQ(i9.value(), 42);
     EXPECT_TRUE(i9.valid());
+
+    std::cout << std::endl << i9 << std::endl;
 }
 
 TEST(fhircpp_test, primitive_string)
@@ -134,4 +138,23 @@ TEST(fhircpp_test, primitive_string)
     s5 = "qux";
     EXPECT_EQ(s5.value(), "qux");
     EXPECT_TRUE(s5.valid());
+
+    std::cout << std::endl << s5 << std::endl;
+}
+
+TEST(fhircpp_test, primitive_decimal)
+{
+    fhir::decimal d;
+    EXPECT_TRUE(d.value().is_zero());
+    EXPECT_TRUE(d.valid());
+
+    fhir::decimal d2("3.14159");
+    boost::multiprecision::cpp_dec_float_50 temp("3.14159");
+    EXPECT_EQ(d2.value(), temp);
+
+    std::cout << std::endl << d2 << std::endl;
+
+    fhir::decimal d3 = d2;
+    EXPECT_EQ(d3.value(), d2.value());
+    std::cout << std::endl << d3 << std::endl;
 }
