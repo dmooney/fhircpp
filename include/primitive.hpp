@@ -29,13 +29,25 @@
 /// Namespace for all fhircpp library code
 namespace fhir
 {
+    namespace internal {
+        typedef bool boolean_type;
+        typedef std::int32_t integer_type;
+        typedef std::string string_type;
+        typedef boost::multiprecision::cpp_dec_float_50 decimal_type;
+        typedef boost::locale::date_time date_time_type;
+        typedef std::chrono::seconds time_type;
+        typedef std::uint32_t unsigned_int_type;
+    }
+
     template<typename T>
     struct default_primitive_traits {
         typedef T value_type;
+
         static bool validate(const value_type&)
         {
             return true;
         }
+
         static T parse(const std::string& str)
         {
             if (std::is_same<T, std::string>::value) {
@@ -48,22 +60,21 @@ namespace fhir
     };
 
     template<>
-    bool default_primitive_traits<bool>::parse(const std::string& str)
+    internal::boolean_type default_primitive_traits<internal::boolean_type>::parse(const std::string& str)
     {
         return boost::iequals(str, "true");
     }
 
     template<>
-    std::int32_t default_primitive_traits<std::int32_t>::parse(const std::string& str)
+    internal::integer_type default_primitive_traits<internal::integer_type >::parse(const std::string& str)
     {
         return std::stol(str);
     }
 
     template<>
-    boost::multiprecision::cpp_dec_float_50
-    default_primitive_traits<boost::multiprecision::cpp_dec_float_50>::parse(const std::string& str)
+    internal::decimal_type default_primitive_traits<internal::decimal_type>::parse(const std::string& str)
     {
-        return boost::multiprecision::cpp_dec_float_50(str.c_str());
+        return internal::decimal_type(str.c_str());
     }
 
     template<typename T>
@@ -76,32 +87,32 @@ namespace fhir
     };
 
     struct code_regex_traits {
-        typedef std::string value_type;
+        typedef internal::string_type value_type;
     protected:
         static const std::string validation_regex;
     };
 
     struct oid_regex_traits {
-        typedef std::string value_type;
+        typedef internal::string_type value_type;
     protected:
         static const std::string validation_regex;
     };
 
     struct id_regex_traits {
-        typedef std::string value_type;
+        typedef internal::string_type value_type;
     protected:
         static const std::string validation_regex;
     };
 
     struct positive_int_traits {
-        typedef std::uint32_t value_type;
+        typedef internal::integer_type value_type;
         static bool validate(value_type value)
         {
             return value > 0;
         }
     };
 
-    /// Precision enumerator for partial dates (e.g. just year or year + month)
+    /// Precision enumeration for partial dates (e.g. just year or year + month)
     enum date_precision {
         year = 0,
         month = 1,
@@ -109,7 +120,7 @@ namespace fhir
     };
 
     struct date_traits {
-        typedef std::pair<date_precision, boost::locale::date_time> value_type;
+        typedef std::pair<date_precision, internal::date_time_type> value_type;
         static bool validate(const value_type& value)
         {
             return true;
@@ -209,25 +220,25 @@ namespace fhir
     };
 
     /// Primitive Boolean type may be true or false
-    typedef primitive<default_primitive_traits<bool>> boolean;
+    typedef primitive<default_primitive_traits<internal::boolean_type>> boolean;
 
     /// Primitive signed 32-bit integer type (for larger values, use decimal)
-    typedef primitive<default_primitive_traits<std::int32_t>> integer;
+    typedef primitive<default_primitive_traits<internal::integer_type>> integer;
 
     /// Primitive sequence of Unicode characters, not to exceed 1MB in size
-    typedef primitive<default_primitive_traits<std::string>> string;
+    typedef primitive<default_primitive_traits<internal::string_type>> string;
 
     /// Primitive type for rational numbers that have a decimal representation
-    typedef primitive<default_primitive_traits<boost::multiprecision::cpp_dec_float_50>> decimal;
+    typedef primitive<default_primitive_traits<internal::decimal_type>> decimal;
 
     /// Primitive type for a Uniform Resource Identifier (RFC 3986)
-    typedef primitive<default_primitive_traits<std::string>> uri;
+    typedef primitive<default_primitive_traits<internal::string_type>> uri;
 
     /// Primitive type for a stream of bytes, base64 encoded (RFC 4648)
-    typedef primitive<default_primitive_traits<std::string>> base64_binary;
+    typedef primitive<default_primitive_traits<internal::string_type>> base64_binary;
 
     /// Primitive type for an instant in time known at least to the second and always including a time zone.
-    typedef primitive<default_primitive_traits<boost::locale::date_time>> instant;
+    typedef primitive<default_primitive_traits<internal::date_time_type>> instant;
 
     /// Primitive type for a date or partial date (e.g. just year or year + month) as used in human communication.
     /// There is no time zone. Dates SHALL be valid dates
@@ -236,12 +247,12 @@ namespace fhir
     /// A date, date-time or partial date (e.g. just year or year + month) as used in human communication. If hours and
     /// minutes are specified, a time zone SHALL be populated. Seconds must be provided due to schema type constraints
     /// but may be zero-filled and may be ignored. Dates SHALL be valid dates. The time "24:00" is not allowed
-    typedef primitive<default_primitive_traits<boost::locale::date_time>> date_time;
+    typedef primitive<default_primitive_traits<internal::date_time_type>> date_time;
 
     /// A time during the day, with no date specified (can be converted to a Duration since midnight). Seconds must be
     /// provided due to schema type constraints but may be zero-filled and may be ignored. The time "24:00" is not
     /// allowed, and neither is a time zone
-    typedef primitive<default_primitive_traits<std::chrono::seconds>> time;
+    typedef primitive<default_primitive_traits<internal::time_type>> time;
 
     // Primitive types with simple restrictions
 
@@ -259,10 +270,10 @@ namespace fhir
     typedef primitive<regex_primitive_traits<id_regex_traits>> id;
 
     /// A string that may contain markdown syntax for optional processing by a markdown presentation engine
-    typedef primitive<default_primitive_traits<std::string>> markdown;
+    typedef primitive<default_primitive_traits<internal::string_type>> markdown;
 
     /// Any non-negative integer (e.g. >= 0)
-    typedef primitive<default_primitive_traits<std::uint32_t>> unsigned_int;
+    typedef primitive<default_primitive_traits<internal::unsigned_int_type>> unsigned_int;
 
     /// Any positive integer (e.g. > 0)
     typedef primitive<positive_int_traits> positive_int;
